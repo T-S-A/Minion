@@ -37,7 +37,7 @@ module Msf
 
       ###############################################
       ### ADJUST THESE SETTINGS AS DESIRED ##########
-			###############################################
+      ###############################################
       
       # The maximum number of concurrent threads/jobs allowed to run
       MaxThreadCount = 40
@@ -89,15 +89,15 @@ module Msf
       ### END ADJUST THESE SETTINGS AS DESIRED ######
       ###############################################
 
-			def commands
-				{
-					'ssh_attack' => "Try password guessing on SSH services",
-					'snmp_attack' => "Try password guessing on SNMP services",
-					'ftp_attack' => "Try password guessing on FTP services",
+    def commands
+        {
+	  'ssh_attack' => "Try password guessing on SSH services",
+	  'snmp_attack' => "Try password guessing on SNMP services",
+	  'ftp_attack' => "Try password guessing on FTP services",
           'tomcat_enum' => "Enumerate Apache Tomcat services",
-					'tomcat_attack' => "Try password guessing on Apache Tomcat Mgr services",
-					'http_attack' => "Try password guessing on HTTP services",
-					'jboss_enum' => "Enumerate Jboss services",
+	  'tomcat_attack' => "Try password guessing on Apache Tomcat Mgr services",
+	  'http_attack' => "Try password guessing on HTTP services",
+	  'jboss_enum' => "Enumerate Jboss services",
           'report_hosts' => "Spit out all open ports and info for each host",
           'smb_enum' => "Enumerate SMB services and Windows OS versions",
           'mssql_enum' => "Enumerate MSSQL services",
@@ -131,14 +131,14 @@ module Msf
           'joomla_attack' => "Try password guessing on Joomla HTTP services",
           'wordpress_enum' => "Enumerate Wordpress version informaiton",
           'wordpress_login_enum' => "Enumerate Wordpress user informaiton"
-				}
-			end
+	}
+    end
 
-			def name
-				"Minion"
-			end
+    def name
+        "Minion"
+    end
 
-			def cmd_ssh_attack
+    def cmd_ssh_attack
         self.shell.run_single("use auxiliary/scanner/ssh/ssh_login")
         self.shell.run_single("set USERPASS_FILE #{MSF_WORDLIST_PATH}#{SSH_USERPASS_FILE}")
         self.shell.run_single("set USER_AS_PASS true")
@@ -194,19 +194,20 @@ module Msf
         run_aux_module("https")
       end
 
-			def cmd_tomcat_enum
-			  self.shell.run_single("use auxiliary/scanner/http/tomcat_enum")
+      def cmd_tomcat_enum
+	self.shell.run_single("use auxiliary/scanner/http/tomcat_enum")
         self.shell.run_single("set VERBOSE true")
         self.shell.run_single("set SSL false")
         run_aux_module("http")
         run_aux_module("www")
         self.shell.run_single("set SSL true")
         run_aux_module("https")  
-			end
+      end
 
       def cmd_smb_enum
         self.shell.run_single("use auxiliary/scanner/smb/smb_version")
         self.shell.run_single("set VERBOSE false")
+	run_aux_module("microsoft-ds")
         run_aux_module("smb")
       end
 
